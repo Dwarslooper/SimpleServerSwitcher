@@ -13,6 +13,8 @@
 
 servers:
   admin-server:
-    command: joinadminserver # The command to join the server
+    commands: # The commands to join the server
+      - joinadminserver
+      - sendmetotheadminserver
     restricted: true # If this server is restricted. If yes, the permission specified below is required.
     permission: my.admin.permission # The permission needed to join this server, if restricted. Otherwise, you can just remove this line.

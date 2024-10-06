@@ -4,34 +4,39 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.config.Configuration;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProvidedServer {
 
     private final String id;
     private final String permission;
     private final boolean restricted;
-    private final Command command;
+    private final List<Command> commands = new ArrayList<>();
 
-    public ProvidedServer(String id, String command, @Nullable String permission, boolean restricted) {
+    public ProvidedServer(String id, List<String> commands, @Nullable String permission, boolean restricted) {
         this.id = id;
         this.permission = permission;
         this.restricted = restricted;
-        this.command = new Command(command);
+        commands.forEach(cmd -> {
+            this.commands.add(new Command(cmd));
+        });
     }
 
     public String getId() {
         return id;
     }
 
-    public Command getCommand() {
-        return command;
+    public List<Command> getCommands() {
+        return commands;
     }
 
-    public String getCommandName() {
-        return command.getName();
+    public List<String> getCommandNames() {
+        return commands.stream().map(net.md_5.bungee.api.plugin.Command::getName).toList();
     }
 
     public String getPermission() {
@@ -76,7 +81,7 @@ public class ProvidedServer {
 
         public ProvidedServer buildOrThrow(String id) {
             boolean restricted = configuration.getBoolean("restricted");
-            return new ProvidedServer(id, configuration.getString("command"), restricted ? configuration.getString("permission") : null, restricted);
+            return new ProvidedServer(id, configuration.getStringList("commands"), restricted ? configuration.getString("permission") : null, restricted);
         }
     }
 

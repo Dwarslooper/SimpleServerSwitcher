@@ -38,7 +38,9 @@ public final class Main extends Plugin {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void reload(PluginManager pm) {
         try {
-            servers.forEach(providedServer -> pm.unregisterCommand(providedServer.getCommand()));
+            servers.forEach(providedServer -> {
+                providedServer.getCommands().forEach(pm::unregisterCommand);
+            });
             servers.clear();
 
             File configFile = new File(getInstance().getDataFolder(), "config.yml");
@@ -59,7 +61,9 @@ public final class Main extends Plugin {
                 servers.add(new ProvidedServer.Parser(server).buildOrThrow(s));
             });
 
-            servers.forEach(providedServer -> pm.registerCommand(this, providedServer.getCommand()));
+            servers.forEach(providedServer -> {
+                providedServer.getCommands().forEach(command -> pm.registerCommand(this, command));
+            });
 
         } catch (IOException e) {
             throw new RuntimeException(e);
