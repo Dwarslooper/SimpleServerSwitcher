@@ -1,0 +1,9 @@
+name: SimpleServerSwitcher
+version: '${project.version}'
+main: com.dwarslooper.extent.simpleserverswitcher.Main
+
+
+permissions:
+  simpleserverswitcher:
+    reload:
+      default: op
